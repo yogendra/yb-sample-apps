@@ -44,15 +44,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Prepare docker image name
-        run: echo "IMAGES="${GITHUB_REPOSITORY},ghcr.io/${GITHUB_REPOSITORY}" >> $GITHUB_ENV
 
       - name: Docker meta
         id: img-meta # you'll use this in the next step
         uses: docker/metadata-action@v3
         with:
           # list of Docker images to use as base name for tags
-          images: ${{ env.IMAGES }}
+          images: |
+            ghcr.io/${{ github.repository }}
+            docker.io/${{ secrets.DOCKERHUB_REPOSITORY }}
+
           # Docker tags based on the following events/attributes
           tags: |
             type=schedule
