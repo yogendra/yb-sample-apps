@@ -7,3 +7,4 @@ yb-sample-apps.iml
 /logs/
 cacerts
 /yb-sample-apps-*.jar
+/.vscode/settings.json
