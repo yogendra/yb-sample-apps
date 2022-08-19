@@ -1,10 +1,25 @@
-FROM openjdk:8-jre-alpine
+ARG JAVA_VERSION=17
+
+ARG JDK_IMAGE=eclipse-temurin
+ARG JDK_IMAGE_TAG=${JAVA_VERSION}-jdk
+
+ARG JRE_IMAGE=eclipse-temurin
+ARG JRE_IMAGE_TAG=${JAVA_VERSION}-jre
+
+FROM ${JDK_IMAGE}:${JDK_IMAGE_TAG} as build
+RUN mkdir -p /opt/workspace
+WORKDIR /opt/workspace
+COPY pom.xml ./mvnw ./
+COPY .mvn/ .mvn/
+RUN ./mvnw -B dependency:resolve-plugins dependency:resolve
+ADD . .
+RUN ./mvnw clean package -DskipDockerBuild -DskipTests
+
+FROM ${JRE_IMAGE}:${JRE_IMAGE_TAG} as main
 MAINTAINER YugaByte
 ENV container=yb-sample-apps
 
 WORKDIR /opt/yugabyte
-
-ARG JAR_FILE
-ADD target/${JAR_FILE} /opt/yugabyte/yb-sample-apps.jar
-
+COPY --from=build /opt/workspace/target/yb-sample-apps.jar /opt/yugabyte/
+USER nobody
 ENTRYPOINT ["/usr/bin/java", "-jar", "/opt/yugabyte/yb-sample-apps.jar"]
