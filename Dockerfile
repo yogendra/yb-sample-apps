@@ -11,9 +11,9 @@ RUN mkdir -p /opt/workspace
 WORKDIR /opt/workspace
 COPY pom.xml ./mvnw ./
 COPY .mvn/ .mvn/
-RUN ./mvnw -B dependency:resolve-plugins dependency:resolve
+RUN ./mvnw -B clean package -DskipDockerBuild -DskipTests dependency:resolve-plugins dependency:resolve
 ADD . .
-RUN ./mvnw clean package -DskipDockerBuild -DskipTests
+RUN ./mvnw -B clean package -DskipDockerBuild -DskipTests
 
 FROM ${JRE_IMAGE}:${JRE_IMAGE_TAG} as main
 MAINTAINER YugaByte
