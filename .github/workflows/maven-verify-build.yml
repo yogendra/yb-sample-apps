@@ -26,9 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Extraction version from pom.xml
-        run: echo '::set-output name=version::$(cat pom.xml | grep \<version\> | head -1 |sed 's/.*\<version\>//;s/\<\/version\>//')'
-        id: pom-version
+      - uses: QwerMike/xpath-action@v1
+        with:
+          id: pom-version
+          filename: 'pom.xml'
+          expression: '//project/version/text()'
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         # https://github.com/docker/setup-buildx-action
@@ -69,7 +71,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=semver,pattern={{version}},value=v${{ steps.pom-version.output.version }}.${{ github.run_number }}
+            type=semver,pattern={{raw}},value=v${{ steps.pom-version.outputs.result }}.${{ github.run_number }}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
