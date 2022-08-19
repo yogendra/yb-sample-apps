@@ -4,3 +4,6 @@ yb-sample-apps.iml
 /.classpath
 /.project
 /.settings/
+/logs/
+cacerts
+/yb-sample-apps-*.jar
