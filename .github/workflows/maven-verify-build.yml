@@ -27,8 +27,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: QwerMike/xpath-action@v1
+        id: pom-version
         with:
-          id: pom-version
           filename: 'pom.xml'
           expression: '//project/version/text()'
       - name: Set up QEMU
