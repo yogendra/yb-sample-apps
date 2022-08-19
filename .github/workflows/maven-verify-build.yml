@@ -21,6 +21,10 @@ jobs:
           java-version: 17
       - name: Build with Maven
         run: mvn -B -DskipDockerBuild package --file pom.xml
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         # https://github.com/docker/setup-buildx-action
