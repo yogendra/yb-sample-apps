@@ -31,7 +31,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: "!startsWith(github.ref, 'refs/tags/')"
         with:
-          tag_name: ${{ steps.pom-version.outputs.info}}.${{ github.run_number }}
+          prerelease: true
+          tag_name: latest-snapshot
           body: "Pre-Release of ${{ steps.pom-version.outputs.info}}.${{ github.run_number }}"
           files: |
             target/yb-sample-apps.jar
