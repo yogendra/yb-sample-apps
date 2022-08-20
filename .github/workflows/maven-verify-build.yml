@@ -27,7 +27,14 @@ jobs:
         with:
           xml-file: pom.xml
           xpath: //*[local-name()='project']/*[local-name()='version']
-
+      - name: Pre-Release
+        uses: softprops/action-gh-release@v1
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        with:
+          tag_name: ${{ steps.pom-version.outputs.info}}.${{ github.run_number }}
+          body: "Pre-Release of ${{ steps.pom-version.outputs.info}}.${{ github.run_number }}"
+          files: |
+            target/yb-sample-apps.jar
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -41,11 +48,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v2
-      - uses: mavrosxristoforos/get-xml-info@1.0
-        id: pom-version
-        with:
-          xml-file: pom.xml
-          xpath: //*[local-name()='project']/*[local-name()='version']
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         # https://github.com/docker/setup-buildx-action
@@ -86,7 +88,6 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-            type=semver,pattern={{raw}},value=v${{ steps.pom-version.outputs.info }}.${{ github.run_number }}
             type=semver,pattern={raw}},value=${{ github.ref }}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
