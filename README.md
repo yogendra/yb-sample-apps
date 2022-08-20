@@ -11,7 +11,12 @@ The workloads here have drivers compatible with the above and emulate a number o
 
 Download yb-sample-apps JAR
 ```
-$ wget https://github.com/yugabyte/yb-sample-apps/releases/download/1.3.9/yb-sample-apps.jar
+$ wget https://github.com/yogendra/yb-sample-apps/releases/download/latest/yb-sample-apps.jar
+```
+
+Download latest snapshot JAR
+```
+$ wget https://github.com/yogendra/yb-sample-apps/releases/download/latest-snapshot/yb-sample-apps.jar
 ```
 
 For help, simply run the following:
