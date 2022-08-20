@@ -22,6 +22,30 @@ jobs:
       - name: Build with Maven
         run: mvn -B -DskipDockerBuild package --file pom.xml
 
+      - uses: mavrosxristoforos/get-xml-info@1.0
+        id: pom-version
+        with:
+          xml-file: pom.xml
+          xpath: //*[local-name()='project']/*[local-name()='version']
+
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: "Release of ${{github.ref}}"
+          files: |
+            target/yb-sample-app.jar
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/yb-sample-app.jar
+          asset_name: yb-sample-app
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Pre-compiles Jar for "
+
   docker-build:
     runs-on: ubuntu-latest
     steps:
