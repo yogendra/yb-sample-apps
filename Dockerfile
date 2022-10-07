@@ -22,4 +22,4 @@ ENV container=yb-sample-apps
 WORKDIR /opt/yugabyte
 COPY --from=build /opt/workspace/target/yb-sample-apps.jar /opt/yugabyte/
 USER nobody
-ENTRYPOINT ["/usr/bin/java", "-jar", "/opt/yugabyte/yb-sample-apps.jar"]
+ENTRYPOINT ["/opt/java/openjdk/bin/java", "-jar", "/opt/yugabyte/yb-sample-apps.jar"]
