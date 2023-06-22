@@ -1,10 +1,14 @@
-FROM openjdk:8-jre-alpine
-MAINTAINER YugaByte
-ENV container=yb-sample-apps
+FROM eclipse-temurin:17-jdk as build
+WORKDIR /workspace/app
 
-WORKDIR /opt/yugabyte
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+RUN ./mvnw install -DskipSigning=true -DskipDockerBuild=true -DskipTests
 
-ARG JAR_FILE
-ADD target/${JAR_FILE} /opt/yugabyte/yb-sample-apps.jar
 
-ENTRYPOINT ["/usr/bin/java", "-jar", "/opt/yugabyte/yb-sample-apps.jar"]
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY --from=build /workspace/app/target/yb-sample-apps.jar /app
+ENTRYPOINT ["java","-jar","yb-sample-apps.jar"]
